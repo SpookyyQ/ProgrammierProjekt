@@ -1,3 +1,5 @@
+!(https://www.htwsaar.de/hochschule/organisation/hochschulkommunikation/design/das-corporate-design-der-htw-saar))
+
  WI Fanshop 🛒 – HTW Saar Programmierprojekt
 
 Dies ist ein Konsolen-basiertes Python-Projekt zur Simulation eines einfachen Webshops, inspiriert vom [HTW Saar Webshop](https://htwsaar-webshop.de/). Das Projekt wurde im Rahmen des Moduls **WIB21-440 – Programmierprojekt** an der HTW Saar entwickelt.
