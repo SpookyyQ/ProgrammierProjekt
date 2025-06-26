@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://www.htwsaar.de/hochschule/organisation/hochschulkommunikation/design/logo-htw-saar.svg" alt="HTW Saar Logo" width="300"/>
+  <img src="[https://www.htwsaar.de/hochschule/organisation/hochschulkommunikation/design/logo-htw-saar.svg](https://www.htwsaar.de/resolveuid/f734c9d1ce1949fd9bb905bbdc416aaa)" alt="HTW Saar Logo" width="300"/>
 </p>
 
  WI Fanshop 🛒 – HTW Saar Programmierprojekt
