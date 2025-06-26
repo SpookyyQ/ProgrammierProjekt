@@ -41,3 +41,9 @@ Dieses Projekt wurde im Rahmen des Moduls WIB21-440 entwickelt.
 - Jason
 - Nico
 - Paul
+
+✅ Status
+
+Warenkorb-Grundfunktionen in Arbeit
+
+
