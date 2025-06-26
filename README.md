@@ -1,10 +1,10 @@
-<table>
+<table border="0">
   <tr>
     <td align="center">
-      <img src="https://www.htwsaar.de/resolveuid/f734c9d1ce1949fd9bb905bbdc416aaa" alt="HTW Saar Logo" width="400"/>
+      <img src="https://www.htwsaar.de/resolveuid/f734c9d1ce1949fd9bb905bbdc416aaa" alt="HTW Saar Logo" width="200"/>
     </td>
     <td align="center">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Shopdiscordfonn.gif" alt="Fanshop GIF" width="300"/>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Shopdiscordfonn.gif" alt="Fanshop GIF" width="200"/>
     </td>
   </tr>
 </table>
