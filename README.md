@@ -33,3 +33,11 @@ Das Programm ermöglicht eine vollständige Verwaltung eines Warenkorbsystems mi
 - Alle Funktionen sind über ein einfaches Menü aufrufbar
 - Trennung von Daten (Listen) und Programmstruktur
 - Alle relevanten Daten sind persistent in `.csv`-Dateien speicherbar (in Arbeit)
+
+👨‍💻 Projektteam
+
+Dieses Projekt wurde im Rahmen des Moduls WIB21-440 entwickelt.
+- Tim
+- Jason
+- Nico
+- Paul
