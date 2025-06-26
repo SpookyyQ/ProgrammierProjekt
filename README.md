@@ -9,14 +9,22 @@ Dies ist ein Konsolen-basiertes Python-Projekt zur Simulation eines einfachen We
 
 Das Programm ermöglicht eine vollständige Verwaltung eines Warenkorbsystems mit Artikeln und Kundeninformationen über die Konsole.
 
-<p align="center">
-  <img src="https://cdn.dribbble.com/userupload/22613632/file/original-3d8dc34bd7c9063aa62b3b6d66f5add6.gif" alt="WI Fanshop Demo GIF" width="100"/>
-</p>
- 🛍️ Warenkorb-Funktionen
-- Artikel zum Warenkorb hinzufügen
-- Artikel aus dem Warenkorb entfernen
-- Berechnung des Gesamtpreises inkl. möglicher Rabatte
+<table>
+  <tr>
+    <td>
+
+### 🛍️ Warenkorb-Funktionen
+- Artikel zum Warenkorb hinzufügen  
+- Artikel aus dem Warenkorb entfernen  
+- Berechnung des Gesamtpreises inkl. möglicher Rabatte  
 - Bestellung abschließen (inkl. sofortiger Rechnungsstellung)
+
+</td>
+    <td>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Shopdiscordfonn.gif" alt="Warenkorb GIF" width="200"/>
+    </td>
+  </tr>
+</table>
 
  📦 Artikel-Funktionen
 - Artikel anlegen und verwalten
