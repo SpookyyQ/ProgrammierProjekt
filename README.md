@@ -47,3 +47,10 @@ Dieses Projekt wurde im Rahmen des Moduls WIB21-440 entwickelt.
 Warenkorb-Grundfunktionen in Arbeit
 
 
+ ▶️ Verwendung
+
+1. Klone dieses Repository:
+   ```bash
+   git clone https://github.com/DeinBenutzername/ProgrammierProjekt.git
+   cd ProgrammierProjekt
+
