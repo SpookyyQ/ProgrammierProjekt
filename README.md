@@ -1,4 +1,4 @@
-![Example Image](https://www.htwsaar.de/hochschule/organisation/hochschulkommunikation/design/das-corporate-design-der-htw-saar))
+![Example Image](https://www.htwsaar.de/hochschule/organisation/hochschulkommunikation/design/das-corporate-design-der-htw-saar)
 
  WI Fanshop 🛒 – HTW Saar Programmierprojekt
 
