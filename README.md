@@ -9,6 +9,9 @@ Dies ist ein Konsolen-basiertes Python-Projekt zur Simulation eines einfachen We
 
 Das Programm ermöglicht eine vollständige Verwaltung eines Warenkorbsystems mit Artikeln und Kundeninformationen über die Konsole.
 
+<p align="center">
+  <img src="https://cdn.dribbble.com/userupload/22613632/file/original-3d8dc34bd7c9063aa62b3b6d66f5add6.gif" alt="WI Fanshop Demo GIF" width="600"/>
+</p>
  🛍️ Warenkorb-Funktionen
 - Artikel zum Warenkorb hinzufügen
 - Artikel aus dem Warenkorb entfernen
