@@ -1,13 +1,7 @@
-<table border="0">
-  <tr>
-    <td align="center">
-      <img src="https://www.htwsaar.de/resolveuid/f734c9d1ce1949fd9bb905bbdc416aaa" alt="HTW Saar Logo" width="200"/>
-    </td>
-    <td align="center">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Shopdiscordfonn.gif" alt="Fanshop GIF" width="200"/>
-    </td>
-  </tr>
-</table>
+<div align="center" style="display: flex; justify-content: center; gap: 40px; align-items: center;">
+  <img src="https://www.htwsaar.de/resolveuid/f734c9d1ce1949fd9bb905bbdc416aaa" alt="HTW Saar Logo" width="200" style="border: none;"/>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Shopdiscordfonn.gif" alt="Shop GIF" width="200" style="border: none;"/>
+</div>
 
 <h1 align="center">WI Fanshop 🛒 – HTW Saar Programmierprojekt</h1>
 
