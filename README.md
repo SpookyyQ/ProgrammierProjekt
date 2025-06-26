@@ -1,4 +1,6 @@
-![Example Image](https://www.htwsaar.de/hochschule/organisation/hochschulkommunikation/design/das-corporate-design-der-htw-saar)
+<p align="center">
+  <img src="https://www.htwsaar.de/hochschule/organisation/hochschulkommunikation/design/logo-htw-saar.svg" alt="HTW Saar Logo" width="300"/>
+</p>
 
  WI Fanshop 🛒 – HTW Saar Programmierprojekt
 
