@@ -1,8 +1,15 @@
-<p align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Shopdiscordfonn.gif" alt="Fanshop GIF" width="300"/>
-</p>
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://www.htwsaar.de/resolveuid/f734c9d1ce1949fd9bb905bbdc416aaa" alt="HTW Saar Logo" width="200"/>
+    </td>
+    <td align="center">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Shopdiscordfonn.gif" alt="Fanshop GIF" width="200"/>
+    </td>
+  </tr>
+</table>
 
- WI Fanshop 🛒 – HTW Saar Programmierprojekt
+<h1 align="center">WI Fanshop 🛒 – HTW Saar Programmierprojekt</h1>
 
 Dies ist ein Konsolen-basiertes Python-Projekt zur Simulation eines einfachen Webshops, inspiriert vom [HTW Saar Webshop](https://htwsaar-webshop.de/). Das Projekt wurde im Rahmen des Moduls **WIB21-440 – Programmierprojekt** an der HTW Saar entwickelt.
 
