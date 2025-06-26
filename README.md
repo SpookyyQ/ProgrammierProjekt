@@ -56,6 +56,6 @@ Warenkorb-Grundfunktionen in Arbeit
 
 1. Klone dieses Repository:
    ```bash
-   git clone https://github.com/DeinBenutzername/ProgrammierProjekt.git
+   git clone https://github.com/SpookyyQ/ProgrammierProjekt.git
    cd ProgrammierProjekt
 
