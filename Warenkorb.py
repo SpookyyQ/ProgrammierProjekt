@@ -1,5 +1,4 @@
 import csv
-import datetime
 artikel_liste = [] #Liste mit allen Artikeln
 kunden_liste = [] # Liste mit allen Kunden
 warenkorb = [] # Temporärer Warenkorb
@@ -87,8 +86,8 @@ def artikel_hinzufuegen():
     id = input("Artikel-ID: ")
     titel = input("Titel: ")
     beschreibung = input("Beschreibung: ")
-    preis = input("Preis: ")
-    bestand = input("Lagerbestand: ")
+    preis = float(input("Preis: "))
+    bestand = int(input("Lagerbestand: "))
     print("Kategorien: Textilien, Accessoires, Schreibwaren")
     kategorie = input("Kategorie: ")
 
@@ -97,6 +96,52 @@ def artikel_hinzufuegen():
     artikel_speichern()
     print(f"Artikel '{titel}' wurde hinzugefügt und gespeichert.")
 
+def artikel_loeschen():
+    artikel_id = input("Gib die ID des zu löschenden Artikels ein: ")
+
+    for artikel in artikel_liste:
+        if artikel.id == artikel_id:
+            artikel_liste.remove(artikel)
+            artikel_speichern()
+            print(f"Artikel '{artikel.titel}' wurde gelöscht.")
+            return
+    print("Artikel mit dieser ID wurde nicht gefunden.")
+
+def artikel_bearbeiten():
+    artikel_id= input("Gib die ID des zu bearbeitenden Artikels ein: ")
+    for artikel in artikel_liste:
+        if artikel.id == artikel_id:
+            print(f"Artikel {artikel.titel} gefunden. \nName: {artikel.titel} \nBeschreibung: {artikel.beschreibung} \nPreis: {artikel.preis} \nBestand: {artikel.bestand} \nKategorie: {artikel.kategorie}\n")
+
+            neuer_titel = input(f"Neuer Titel (aktuell: {artikel.titel}): ").strip()
+            if neuer_titel:
+                artikel.titel = neuer_titel
+
+            neue_beschreibung = input(f"Neue Beschreibung (aktuell: {artikel.beschreibung}): ").strip()
+            if neue_beschreibung:
+                artikel.beschreibung = neue_beschreibung
+
+            neuer_preis = float(input(f"Neuer Preis (aktuell: {artikel.preis}): "))
+            if neuer_preis:
+                artikel.preis = neuer_preis
+
+            neuer_bestand = int(input(f"Neuer Bestand (aktuell: {artikel.bestand}): "))
+            if neuer_bestand:
+                artikel.bestand = neuer_bestand
+
+            neue_kategorie = input(f"Neue Kategorie (aktuell: {artikel.kategorie}): ")
+            if neue_kategorie:
+                artikel.kategorie = neue_kategorie
+
+                artikel_speichern()
+
+            print("Artikel wurde erfolgreich bearbeitet")
+
+            return
+
+        else:
+            print(f"Artikel mit {artikel_id} wurde nicht gefunden.")
+            return
 
 def verwaltungs_menue():
     while True:
