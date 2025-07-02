@@ -1,21 +1,21 @@
-import csv
+import csv       # Importiert das Modul zum Lesen und Schreiben von CSV-Dateien
 artikel_liste = [] #Liste mit allen Artikeln
 kunden_liste = [] # Liste mit allen Kunden
 warenkorb = [] # Temporärer Warenkorb
 bestellungen = []
 #Rabatte
 rabatt_aktiv = False
-rabatt_Prozent = 10
+rabatt_prozent = 10
 min_bestellwert = 50.0
 
 class Kunde:
-    def __init__(self,id,name,benutzername,passwort,plz,strasse,ort):
+    def __init__(self,id,name,benutzername,passwort,strasse, plz, ort):
         self.id = id
         self.name = name
         self.benutzername = benutzername
         self.passwort = passwort
-        self.plz = plz
         self.strasse = strasse
+        self.plz = plz
         self.ort = ort
 
 def kunden_speichern(dateiname="kunden.csv"):
@@ -33,9 +33,31 @@ def kunden_laden(dateiname="kunden.csv"):
             for row in reader:
                 if len(row) == 7:
                  id,name,benutzername,passwort,strasse,plz,ort = row
-                 kunden_liste.append(Kunde(int(id),name,benutzername, passwort, strasse, plz, ort))
+                 kunden_liste.append(Kunde(int(id),name,benutzername,passwort,strasse,plz,ort))
     except FileNotFoundError:
         pass
+
+def artikel_suchen():
+    suchbegriff = input("Wir haben eine große Auswahl an Artikel, was suchen sie genau ?").strip()
+    gefundene_artikel = []
+
+    for artikel in artikel_liste:
+        if suchbegriff in artikel.titel.lower() or suchbegriff in artikel.beschreibung.lower() or suchbegriff in artikel.kategorie.lower():
+            gefundene_artikel.append(artikel)
+
+    if not gefundene_artikel:
+        print("Keine Artikel gefunden.")
+    else:
+        print("\nGefundene Artikel:")
+        for artikel in gefundene_artikel:
+            print(f"""
+ID: {artikel.id}
+Titel: {artikel.titel}
+Beschreibung: {artikel.beschreibung}
+Preis: {artikel.preis} €
+Bestand: {artikel.bestand}
+Kategorie: {artikel.kategorie}
+-----------------------------""")
 
 #def zum laden der Menüpunkte
 def artikel_kategorien():
@@ -143,41 +165,118 @@ def artikel_bearbeiten():
             print(f"Artikel mit {artikel_id} wurde nicht gefunden.")
             return
 
+def artikel_rabatt():
+    global rabatt_aktiv
+    print("\n--- Rabatt-Einstellungen ---")
+    if rabatt_aktiv:
+        print("Ein Rabatt ist derzeit aktiv")
+        wahl=input("Möchtest du den Rabatt deaktivieren? j/n ").strip()
+        if wahl== "j":
+            rabatt_aktiv = False
+        else:
+            print("Rabatt bleibt aktiv")
+
+    else:
+        print("Derzeit ist kein Rabatt aktiv")
+        wahl=input("Möchtest du den rabatt aktivieren? j/n ").strip()
+        if wahl== "j":
+            rabatt_aktiv= True
+            print(f"Der Rabatt von {rabatt_prozent}% ab einem Mindestbestellwert von {min_bestellwert:.2f} € wurde aktiviert.")
+        else:
+            print("Rabatt bleibt deaktiviert")
+
+##########Kundenlsite#######
+#Funktion zum Hinzufügen eines Artikels in den Warenkorb#
+def artikel_in_warenkorb():
+    print("\n Artikel in den Warenkorb legen ")
+    artikel_id = input("Gib die Artikel-ID ein, die du kaufen möchtest: ").strip() # strip enfernt leerzeichen
+    gefunden = False  # Noch kein Artikel gefunden wir gehen davon aus das der Artikel nicht exestiert
+    # Wir suchen jetzt da der ID
+    for artikel in artikel_liste:
+        if artikel.id == artikel_id:
+            print(f"Gefunden: {artikel.titel} – {artikel.preis:.2f} € – Lager: {artikel.bestand}") #.2f macht aus 12.5 = 12.50
+            menge = input("Wie viele möchtest du kaufen? ")
+            if menge.isdigit():  # Prüfe, ob Eingabe eine gültige Zahl ist
+                menge = int(menge)
+                if menge > 0 and menge <= artikel.bestand:
+                    # Artikel und Menge als Tupel in Warenkorb legen
+                    warenkorb.append((artikel, menge))
+                    print(f"{menge}x '{artikel.titel}' zum Warenkorb hinzugefügt.")
+                else:
+                    print("Ungültige Menge – entweder zu viel oder nicht vorhanden.")
+            else:
+                print("Bitte eine gültige Zahl eingeben.")
+            gefunden = True
+            break  # Schleife beenden, da Artikel-ID eindeutig ist
+
+        if not gefunden:
+            print("Kein Artikel mit dieser ID gefunden.")
+
+
+    while True:
+        weiterer_artikel = input("Wollen sie einen weiteren Artikel kaufen ? j/n ").strip().lower()
+        if weiterer_artikel == "j":
+            artikel_in_warenkorb()
+            break
+
+        elif weiterer_artikel == "n":
+            kunden_menue()
+            break
+
+        else:
+            print("Bitte bestätigen sie mit j oder n ")
+
+
+def kunden_anzeigen():
+    print("\n Kundenliste")
+    if not kunden_liste: # wenn die Liste leer wäre
+       print("Es sind noch keine Kunden registriert")
+       return # funktion beenden
+    for kunde in kunden_liste:
+        print(f"""
+    ID: {kunde.id}
+    Name: {kunde.name}
+    Benutzername: {kunde.benutzername}
+    Adresse: {kunde.strasse}, {kunde.plz} {kunde.ort}
+    Passwort: {kunde.passwort}
+     -----------------------------""")  # Trenner zur besseren Lesbarkeit
+
+########Kundenliste#####
 def verwaltungs_menue():
     while True:
         print("\n--- Webshop Verwaltung ---")
         print("1. Artikel hinzufügen") # gemacht
-        print("2. Artikel löschen")
-        print("3. Artikel bearbeiten")
-        print("4. Rabatt Aktivieren")
+        print("2. Artikel löschen")   #gemacht
+        print("3. Artikel bearbeiten") #gemacht
+        print("4. Rabatt Aktivieren") #gemacht
         print("5. Bericht Anzeigen")
-        print("6. Kunden liste")
+        print("6. Kunden liste") #gemacht
         print("0. Abbrechen")
         auswahl = input()
 
         if auswahl == "1": artikel_hinzufuegen()  # gemacht
-        elif auswahl == "2": artikel_loeschen()
-        elif auswahl == "3": artikel_bearbeiten()
-        elif auswahl == "4": rabatt_aktivieren()
+        elif auswahl == "2": artikel_loeschen()     #gemacht
+        elif auswahl == "3": artikel_bearbeiten()  #gemacht
+        elif auswahl == "4": artikel_rabatt()       #gemacht
         elif auswahl == "5": bericht_anzeigen()
-        elif auswahl == "6": kunden_liste()
+        elif auswahl == "6": kunden_anzeigen()      #gemacht
         elif auswahl == "0": break
         else: print("Auswahl ungültig")
 
 def kunden_menue():
     while True:
         print("\n--- WI Fanshop ---")
-        print("1. Artikel suchen")
+        print("1. Artikel suchen") #gemacht
         print("2. Artikel anzeigen")  # gemacht
-        print("3. Artikel in Warenkorb")
+        print("3. Artikel in Warenkorb") #gemacht
         print("4. Warenkorb anzeigen")
         print("5. Bestellung abschließen")
         print("0. Abmelden")
         auswahl = input()
 
-        if auswahl == "1": artikel_suchen()
+        if auswahl == "1": artikel_suchen() #gemacht
         elif auswahl == "2": artikel_kategorien() # gemacht
-        elif auswahl == "3": artikel_in_warenkorb()
+        elif auswahl == "3": artikel_in_warenkorb() #gemacht
         elif auswahl == "4": warenkorb_anzeigen()
         elif auswahl == "5": warenkorb_bestellen()
         elif auswahl == "12345": verwaltungs_menue()
