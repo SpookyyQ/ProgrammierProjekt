@@ -1,4 +1,8 @@
-import csv       # Importiert das Modul zum Lesen und Schreiben von CSV-Dateien
+import csv # Importiert das Modul zum Lesen und Schreiben von CSV-Dateien
+import datetime
+
+x=datetime.datetime.now()
+
 artikel_liste = [] #Liste mit allen Artikeln
 kunden_liste = [] # Liste mit allen Kunden
 warenkorb = [] # Temporärer Warenkorb
@@ -53,31 +57,57 @@ def artikel_suchen():
             print(f"""
 ID: {artikel.id}
 Titel: {artikel.titel}
+Größe: {artikel.groesse}
 Beschreibung: {artikel.beschreibung}
 Preis: {artikel.preis} €
 Bestand: {artikel.bestand}
 Kategorie: {artikel.kategorie}
 -----------------------------""")
-
 #def zum laden der Menüpunkte
-def artikel_kategorien():
-    while True:
-        print("\n--- Kategorien ---")
-        print("1. Textilien")
-        print("2. Accessoires")
-        print("3. Schreibwaren")
-        print("0. Zurück")
-        auswahl = input()
-        if auswahl == "1": Textilien()
-        elif auswahl == "2": Accessoires()
-        elif auswahl == "3": Schreibwaren()
-        elif auswahl == "0": kunden_menue()
-        else: print("auswahl ungültig")
+def artikel_nach_kategorie_anzeigen():
+    print("\nVerfügbare Kategorien:")
+    print("1. Textilien")
+    print("2. Accessoires")
+    print("3. Schreibwaren")
+
+    auswahl = input("Welche Kategorie möchtest du anzeigen? (1–3): ").strip()
+
+    if auswahl == "1":
+        gewählte_kategorie = "Textilien"
+    elif auswahl == "2":
+        gewählte_kategorie = "Accessoires"
+    elif auswahl == "3":
+        gewählte_kategorie = "Schreibwaren"
+    else:
+        print("Ungültige Auswahl.")
+        return
+
+    gefundene_artikel = [artikel for artikel in artikel_liste if artikel.kategorie.lower() == gewählte_kategorie.lower()]
+
+    if not gefundene_artikel:
+        print(f"Keine Artikel in der Kategorie '{gewählte_kategorie}' gefunden.")
+        return
+
+    print(f"\n Artikel in der Kategorie: {gewählte_kategorie}")
+    for artikel in gefundene_artikel:
+        print(f"""
+ID: {artikel.id}
+Titel: {artikel.titel}
+Größe: {artikel.groesse}
+Beschreibung: {artikel.beschreibung}
+Preis: {artikel.preis} €
+Bestand: {artikel.bestand}
+Kategorie: {artikel.kategorie}
+Erstellungsdatum: {artikel.erstellungsdatum}
+-----------------------------""")
+
 
 class Artikel:
-    def __init__(self,id,titel,beschreibung,preis,bestand,kategorie):
+    def __init__(self,id,erstellungsdatum,titel,groesse,beschreibung,preis,bestand,kategorie):
         self.id = id
+        self.erstellungsdatum = erstellungsdatum
         self.titel = titel
+        self.groesse = groesse
         self.beschreibung = beschreibung
         self.preis = preis
         self.bestand = bestand
@@ -86,9 +116,9 @@ class Artikel:
 def artikel_speichern(dateiname="artikel.csv"):
     with open(dateiname,mode="w",encoding="utf-8",newline="") as a_liste:
         writer = csv.writer(a_liste)
-        writer.writerow(["ID", "Titel", "Beschreibung", "Preis", "Bestand", "Kategorie"])
+        writer.writerow(["ID","Erstellungsdatum", "Titel","Grösse", "Beschreibung", "Preis", "Bestand", "Kategorie"])
         for artikel in artikel_liste:
-            writer.writerow([artikel.id, artikel.titel, artikel.beschreibung, artikel.preis, artikel.bestand, artikel.kategorie])
+            writer.writerow([artikel.id,artikel.erstellungsdatum,artikel.titel,artikel.groesse, artikel.beschreibung, artikel.preis, artikel.bestand, artikel.kategorie])
 
 #Artikel aus CSV laden
 def artikel_laden(dateiname="artikel.csv"):
@@ -97,23 +127,25 @@ def artikel_laden(dateiname="artikel.csv"):
             reader = csv.reader(a_liste)
             next(reader)
             for row in reader:
-                if len(row) == 6:
-                    id,titel,beschreibung,preis,bestand,kategorie = row
-                    artikel_liste.append(Artikel(id,titel,beschreibung,float(preis),int(bestand),kategorie))
+                if len(row) == 8:
+                    id,erstellungsdatum,titel,groesse,beschreibung,preis,bestand,kategorie = row
+                    artikel_liste.append(Artikel(id,erstellungsdatum,beschreibung,titel,groesse,float(preis),int(bestand),kategorie))
     except FileNotFoundError:
         pass
 
 def artikel_hinzufuegen():
     print("\n--- Artikel hinzufügen ---")
     id = input("Artikel-ID: ")
+    erstellungsdatum = x.strftime("%d/%m/%Y") #Formatierung der import datime damit es besser aussieht
     titel = input("Titel: ")
+    groesse = input("Groesse: ")
     beschreibung = input("Beschreibung: ")
     preis = float(input("Preis: "))
     bestand = int(input("Lagerbestand: "))
     print("Kategorien: Textilien, Accessoires, Schreibwaren")
     kategorie = input("Kategorie: ")
 
-    artikel = Artikel(id, titel, beschreibung, preis, bestand, kategorie)
+    artikel = Artikel(id,erstellungsdatum,titel,groesse, beschreibung, preis, bestand, kategorie)
     artikel_liste.append(artikel)
     artikel_speichern()
     print(f"Artikel '{titel}' wurde hinzugefügt und gespeichert.")
@@ -133,7 +165,7 @@ def artikel_bearbeiten():
     artikel_id= input("Gib die ID des zu bearbeitenden Artikels ein: ")
     for artikel in artikel_liste:
         if artikel.id == artikel_id:
-            print(f"Artikel {artikel.titel} gefunden. \nName: {artikel.titel} \nBeschreibung: {artikel.beschreibung} \nPreis: {artikel.preis} \nBestand: {artikel.bestand} \nKategorie: {artikel.kategorie}\n")
+            print(f"Artikel {artikel.titel} gefunden. \nName: {artikel.titel} \nBeschreibung: {artikel.beschreibung} \nGröße: {artikel.groesse} \nPreis: {artikel.preis} \nBestand: {artikel.bestand} \nKategorie: {artikel.kategorie}\n")
 
             neuer_titel = input(f"Neuer Titel (aktuell: {artikel.titel}): ").strip()
             if neuer_titel:
@@ -143,13 +175,17 @@ def artikel_bearbeiten():
             if neue_beschreibung:
                 artikel.beschreibung = neue_beschreibung
 
-            neuer_preis = float(input(f"Neuer Preis (aktuell: {artikel.preis}): "))
-            if neuer_preis:
-                artikel.preis = neuer_preis
+            neue_groesse = input(f"Neue Größe (aktuell: {artikel.groesse}): ").strip()
+            if neue_groesse:
+                artikel.groesse = neue_groesse
 
-            neuer_bestand = int(input(f"Neuer Bestand (aktuell: {artikel.bestand}): "))
-            if neuer_bestand:
-                artikel.bestand = neuer_bestand
+            eingabe = input(f"Neuer Preis (aktuell: {artikel.preis}): ").strip()
+            if eingabe:
+                artikel.preis = float(eingabe)
+
+            eingabe = input(f"Neuer Bestand (aktuell: {artikel.bestand}): ")
+            if eingabe:
+                artikel.bestand = float(eingabe)
 
             neue_kategorie = input(f"Neue Kategorie (aktuell: {artikel.kategorie}): ")
             if neue_kategorie:
@@ -258,7 +294,7 @@ def verwaltungs_menue():
         elif auswahl == "2": artikel_loeschen()     #gemacht
         elif auswahl == "3": artikel_bearbeiten()  #gemacht
         elif auswahl == "4": artikel_rabatt()       #gemacht
-        elif auswahl == "5": bericht_anzeigen()
+        elif auswahl == "5": bericht_anzeigen()  #entweder nur statistik oder mit matlib
         elif auswahl == "6": kunden_anzeigen()      #gemacht
         elif auswahl == "0": break
         else: print("Auswahl ungültig")
@@ -267,7 +303,7 @@ def kunden_menue():
     while True:
         print("\n--- WI Fanshop ---")
         print("1. Artikel suchen") #gemacht
-        print("2. Artikel anzeigen")  # gemacht
+        print("2. Artikel anzeigen") #gemacht
         print("3. Artikel in Warenkorb") #gemacht
         print("4. Warenkorb anzeigen")
         print("5. Bestellung abschließen")
@@ -275,7 +311,7 @@ def kunden_menue():
         auswahl = input()
 
         if auswahl == "1": artikel_suchen() #gemacht
-        elif auswahl == "2": artikel_kategorien() # gemacht
+        elif auswahl == "2": artikel_nach_kategorie_anzeigen()
         elif auswahl == "3": artikel_in_warenkorb() #gemacht
         elif auswahl == "4": warenkorb_anzeigen()
         elif auswahl == "5": warenkorb_bestellen()
