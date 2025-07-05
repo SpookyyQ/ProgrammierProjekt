@@ -23,26 +23,28 @@ class Kunde:
         self.ort = ort
 
 def kunden_speichern(dateiname="kunden.csv"):
-    with open(dateiname,mode="w", encoding="utf-8") as k_liste:
+    with open(dateiname,mode="w", encoding="utf-8",newline="") as k_liste:
         writer=csv.writer(k_liste)
         writer.writerow(["ID", "Name","Benutzername", "Passwort", "Strasse","PLZ", "Ort"])
         for kunde in kunden_liste:
             writer.writerow([kunde.id, kunde.name,kunde.benutzername, kunde.passwort, kunde.strasse, kunde.plz, kunde.ort])
 
 def kunden_laden(dateiname="kunden.csv"):
+    global kunden_liste
+    kunden_liste.clear()
     try:
-        with open(dateiname,mode= "r", encoding="utf-8") as k_liste:
+        with open(dateiname,mode= "r", encoding="utf-8",newline="") as k_liste:
             reader= csv.reader(k_liste)
             next(reader)             #Die erste Zeile wird übersprungen da dort keine echten kundendaten stehen.
             for row in reader:
-                if len(row) == 7:
+                if len(row) == 7 and all(row):
                  id,name,benutzername,passwort,strasse,plz,ort = row
                  kunden_liste.append(Kunde(int(id),name,benutzername,passwort,strasse,plz,ort))
     except FileNotFoundError:
         pass
 
 def artikel_suchen():
-    suchbegriff = input("Wir haben eine große Auswahl an Artikel, was suchen sie genau ?").strip()
+    suchbegriff = input("Wir haben eine große Auswahl an Artikel, was suchen sie genau ? ").strip().lower()
     gefundene_artikel = []
 
     for artikel in artikel_liste:
@@ -129,7 +131,7 @@ def artikel_laden(dateiname="artikel.csv"):
             for row in reader:
                 if len(row) == 8:
                     id,erstellungsdatum,titel,groesse,beschreibung,preis,bestand,kategorie = row
-                    artikel_liste.append(Artikel(id,erstellungsdatum,beschreibung,titel,groesse,float(preis),int(bestand),kategorie))
+                    artikel_liste.append(Artikel(id,erstellungsdatum,titel,groesse,beschreibung,float(preis),int(bestand),kategorie))
     except FileNotFoundError:
         pass
 
@@ -191,7 +193,7 @@ def artikel_bearbeiten():
             if neue_kategorie:
                 artikel.kategorie = neue_kategorie
 
-                artikel_speichern()
+            artikel_speichern()
 
             print("Artikel wurde erfolgreich bearbeitet")
 
@@ -225,13 +227,13 @@ def artikel_rabatt():
 #Funktion zum Hinzufügen eines Artikels in den Warenkorb#
 def artikel_in_warenkorb():
     print("\n Artikel in den Warenkorb legen ")
-    artikel_id = input("Gib die Artikel-ID ein, die du kaufen möchtest: ").strip() # strip enfernt leerzeichen
+    artikel_id = input("Gib die Artikel-ID ein, die du hinzufügen möchtest: ").strip() # strip enfernt leerzeichen
     gefunden = False  # Noch kein Artikel gefunden wir gehen davon aus das der Artikel nicht exestiert
     # Wir suchen jetzt da der ID
     for artikel in artikel_liste:
         if artikel.id == artikel_id:
             print(f"Gefunden: {artikel.titel} – {artikel.preis:.2f} € – Lager: {artikel.bestand}") #.2f macht aus 12.5 = 12.50
-            menge = input("Wie viele möchtest du kaufen? ")
+            menge = input("Wie viele möchtest du hinzufügen? ")
             if menge.isdigit():  # Prüfe, ob Eingabe eine gültige Zahl ist
                 menge = int(menge)
                 if menge > 0 and menge <= artikel.bestand:
@@ -245,22 +247,69 @@ def artikel_in_warenkorb():
             gefunden = True
             break  # Schleife beenden, da Artikel-ID eindeutig ist
 
-        if not gefunden:
-            print("Kein Artikel mit dieser ID gefunden.")
+    if not gefunden:
+        print("Kein Artikel mit dieser ID gefunden.")
 
+def warenkorb_anzeigen():
+    print("\n--- Dein Warenkorb ---")
+    if not warenkorb:
+        print("Der Warenkorb ist leer.")
+        return
 
-    while True:
-        weiterer_artikel = input("Wollen sie einen weiteren Artikel kaufen ? j/n ").strip().lower()
-        if weiterer_artikel == "j":
-            artikel_in_warenkorb()
-            break
+    gesamtpreis = 0
+    for artikel, menge in warenkorb:
+        einzelpreis = artikel.preis
+        zwischensumme = einzelpreis * menge
+        gesamtpreis += zwischensumme
+        print(f"{menge}x {artikel.titel} ({einzelpreis:.2f} € / Stk.) – Zwischensumme: {zwischensumme:.2f} €")
 
-        elif weiterer_artikel == "n":
-            kunden_menue()
-            break
+    print(f"\nGesamtpreis: {gesamtpreis:.2f} €")
 
-        else:
-            print("Bitte bestätigen sie mit j oder n ")
+    # Rabatt anzeigen, aber noch nicht abziehen (das macht warenkorb_bestellen)
+    if rabatt_aktiv and gesamtpreis >= min_bestellwert:
+        rabatt_betrag = gesamtpreis * (rabatt_prozent / 100)
+        neuer_gesamtpreis = gesamtpreis - rabatt_betrag
+        print(f"Rabatt aktiviert: -{rabatt_betrag:.2f} € ({rabatt_prozent}% Rabatt)")
+        print(f"Endpreis nach Rabatt: {neuer_gesamtpreis:.2f} €")
+    elif rabatt_aktiv:
+        differenz = min_bestellwert - gesamtpreis
+        print(f"(Rabatt aktiv, aber du musst noch {differenz:.2f} € mehr kaufen für den Rabatt von {rabatt_prozent}%)")
+
+def warenkorb_bestellen():
+    print("\n--- Bestellung abschließen ---")
+
+    if not warenkorb:
+        print("Dein Warenkorb ist leer. Bestellung nicht möglich.")
+        return
+
+    gesamtpreis = 0
+    for artikel, menge in warenkorb:
+        zwischensumme = artikel.preis * menge
+        gesamtpreis += zwischensumme
+
+    # Rabattberechnung
+    rabatt_betrag = 0
+    if rabatt_aktiv and gesamtpreis >= min_bestellwert:
+        rabatt_betrag = gesamtpreis * (rabatt_prozent / 100)
+        gesamtpreis -= rabatt_betrag
+        print(f"✔ Rabatt von {rabatt_prozent}% angewendet: -{rabatt_betrag:.2f} €")
+
+    print(f"\nEndpreis deiner Bestellung: {gesamtpreis:.2f} €")
+
+    # Lagerbestand reduzieren
+    for artikel, menge in warenkorb:
+        artikel.bestand -= menge
+        if artikel.bestand < 0:
+            artikel.bestand = 0  # Sicherheit
+
+    artikel_speichern()  # aktualisierte Bestände speichern
+
+    # Bestellhistorie (optional – wenn du das später speichern willst)
+    # bestellungen.append((datetime.datetime.now(), warenkorb.copy(), gesamtpreis))
+
+    # Warenkorb leeren
+    warenkorb.clear()
+    print("Deine Bestellung wurde erfolgreich abgeschlossen.")
 
 
 def kunden_anzeigen():
@@ -305,18 +354,18 @@ def kunden_menue():
         print("1. Artikel suchen") #gemacht
         print("2. Artikel anzeigen") #gemacht
         print("3. Artikel in Warenkorb") #gemacht
-        print("4. Warenkorb anzeigen")
+        print("4. Warenkorb anzeigen") #gemacht
         print("5. Bestellung abschließen")
         print("0. Abmelden")
         auswahl = input()
 
         if auswahl == "1": artikel_suchen() #gemacht
-        elif auswahl == "2": artikel_nach_kategorie_anzeigen()
+        elif auswahl == "2": artikel_nach_kategorie_anzeigen() #gemacht glaube ich mal LG TIm
         elif auswahl == "3": artikel_in_warenkorb() #gemacht
-        elif auswahl == "4": warenkorb_anzeigen()
+        elif auswahl == "4": warenkorb_anzeigen() #gemacht
         elif auswahl == "5": warenkorb_bestellen()
         elif auswahl == "12345": verwaltungs_menue()
-        elif auswahl == "0": einleitung()
+        elif auswahl == "0": einleitung() #genacht
         else: print("Auswahl ungültig")
 
 def einleitung():
@@ -370,6 +419,6 @@ def laden():
     kunden_laden()
     artikel_laden()
 
-einleitung()
 laden()
+einleitung()
 kunden_menue()
