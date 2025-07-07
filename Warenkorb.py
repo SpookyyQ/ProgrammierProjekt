@@ -126,7 +126,7 @@ def artikel_speichern(dateiname="artikel.csv"):
 def artikel_laden(dateiname="artikel.csv"):
     try:
         with open(dateiname,mode="r",encoding="utf-8") as a_liste:
-            reader = csv.reader(a_liste)
+            reader = csv.yc(a_liste)
             next(reader)
             for row in reader:
                 if len(row) == 8:
