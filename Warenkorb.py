@@ -232,14 +232,13 @@ def artikel_in_warenkorb():
     # Wir suchen jetzt da der ID
     for artikel in artikel_liste:
         if artikel.id == artikel_id:
-            print(f"Gefunden: {artikel.titel} – {artikel.preis:.2f} € – Lager: {artikel.bestand}") #.2f macht aus 12.5 = 12.50
+            print(f"Gefunden: {artikel.titel} – {artikel.preis:.2f} € – Grösse: {artikel.groesse} Lager: {artikel.bestand}") #.2f macht aus 12.5 = 12.50
             menge = input("Wie viele möchtest du hinzufügen? ")
             if menge.isdigit():  # Prüfe, ob Eingabe eine gültige Zahl ist
                 menge = int(menge)
                 if menge > 0 and menge <= artikel.bestand:
-                    # Artikel und Menge als Tupel in Warenkorb legen
                     warenkorb.append((artikel, menge))
-                    print(f"{menge}x '{artikel.titel}' zum Warenkorb hinzugefügt.")
+                    print(f"{menge}x {artikel.titel} in Größe {artikel.groesse} zum Warenkorb hinzugefügt.")
                 else:
                     print("Ungültige Menge – entweder zu viel oder nicht vorhanden.")
             else:
@@ -287,29 +286,48 @@ def warenkorb_bestellen():
         zwischensumme = artikel.preis * menge
         gesamtpreis += zwischensumme
 
-    # Rabattberechnung
     rabatt_betrag = 0
     if rabatt_aktiv and gesamtpreis >= min_bestellwert:
         rabatt_betrag = gesamtpreis * (rabatt_prozent / 100)
         gesamtpreis -= rabatt_betrag
-        print(f"✔ Rabatt von {rabatt_prozent}% angewendet: -{rabatt_betrag:.2f} €")
+        print(f"Rabatt von {rabatt_prozent}% angewendet: -{rabatt_betrag:.2f} €")
 
     print(f"\nEndpreis deiner Bestellung: {gesamtpreis:.2f} €")
 
-    # Lagerbestand reduzieren
     for artikel, menge in warenkorb:
         artikel.bestand -= menge
+
         if artikel.bestand < 0:
             artikel.bestand = 0  # Sicherheit
 
-    artikel_speichern()  # aktualisierte Bestände speichern
-
-    # Bestellhistorie (optional – wenn du das später speichern willst)
-    # bestellungen.append((datetime.datetime.now(), warenkorb.copy(), gesamtpreis))
-
-    # Warenkorb leeren
+    artikel_speichern()
     warenkorb.clear()
     print("Deine Bestellung wurde erfolgreich abgeschlossen.")
+
+def artikel_aus_warenkorb_entfernen():
+    artikel_id = input("Welche Artikel-ID soll entfernt werden? ").strip()
+
+    for i, (artikel, menge) in enumerate(warenkorb):
+        if artikel.id == artikel_id:
+            print(f"Im Warenkorb: {menge}x {artikel.titel}")
+            anzahl = input("Wie viele möchtest du entfernen? ").strip()
+
+            if anzahl.isdigit():
+                anzahl = int(anzahl)
+
+                if anzahl >= menge:
+                    del warenkorb[i]
+                    print("Artikel komplett entfernt.")
+                elif anzahl > 0:
+                    warenkorb[i] = (artikel, menge - anzahl)
+                    print(f"{anzahl} Stück entfernt. Noch {menge - anzahl} im Warenkorb.")
+                else:
+                    print("Bitte gib eine Zahl größer als 0 ein.")
+            else:
+                print("Ungültige Eingabe.")
+            return
+
+    print("Artikel nicht im Warenkorb gefunden.")
 
 
 def kunden_anzeigen():
@@ -356,6 +374,7 @@ def kunden_menue():
         print("3. Artikel in Warenkorb") #gemacht
         print("4. Warenkorb anzeigen") #gemacht
         print("5. Bestellung abschließen")
+        print("6. Artikel aus Warenkorb entfernen")
         print("0. Abmelden")
         auswahl = input()
 
@@ -364,6 +383,7 @@ def kunden_menue():
         elif auswahl == "3": artikel_in_warenkorb() #gemacht
         elif auswahl == "4": warenkorb_anzeigen() #gemacht
         elif auswahl == "5": warenkorb_bestellen()
+        elif auswahl == "6": artikel_aus_warenkorb_entfernen()  # gemacht
         elif auswahl == "12345": verwaltungs_menue()
         elif auswahl == "0": einleitung() #genacht
         else: print("Auswahl ungültig")
