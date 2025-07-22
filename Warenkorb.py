@@ -126,7 +126,7 @@ def artikel_speichern(dateiname="artikel.csv"):
 def artikel_laden(dateiname="artikel.csv"):
     try:
         with open(dateiname,mode="r",encoding="utf-8") as a_liste:
-            reader = csv.yc(a_liste)
+            reader = csv.reader(a_liste)
             next(reader)
             for row in reader:
                 if len(row) == 8:
@@ -328,6 +328,77 @@ def artikel_aus_warenkorb_entfernen():
             return
 
     print("Artikel nicht im Warenkorb gefunden.")
+
+def bericht_anzeigen():
+    print("\n--- Bericht für die Geschäftsführung ---")
+    dateiname = "bestellungen.csv"
+
+    try:
+        with open(dateiname, mode="r", encoding="utf-8") as datei:
+            reader = csv.DictReader(datei)
+            bestellungen = list(reader)
+
+    except FileNotFoundError:
+        print("Keine Bestellungen vorhanden.")
+        return
+
+    start_datum = input("Gib ein Startdatum ein (Format: TT.MM.JJJJ): ")
+    end_datum = input("Gib ein Enddatum ein (Format: TT.MM.JJJJ): ")
+
+    def parse_datum(datum_str):
+        try:
+            return datetime.datetime.strptime(datum_str, "%d.%m.%Y")
+        except:
+            print("Falsches Datum.")
+            return None
+
+    start = parse_datum(start_datum)
+    end = parse_datum(end_datum)
+
+    if not start or not end:
+        return
+
+    # Filtere relevante Bestellungen nach Zeitraum
+    gefilterte_bestellungen = []
+    for b in bestellungen:
+        zeitstempel = b["Datum"].split()[0]  # Datum ohne Uhrzeit
+        zeit_objekt = parse_datum(zeitstempel)
+        if zeit_objekt and start <= zeit_objekt <= end:
+            gefilterte_bestellungen.append(b)
+
+    if not gefilterte_bestellungen:
+        print("Keine Bestellungen im angegebenen Zeitraum.")
+        return
+
+    # Anzahl der Bestellungen
+    kunden_bestellungen = {}
+    for b in gefilterte_bestellungen:
+        kunde = b["Kunde"]
+        gesamt = float(b["Gesamtpreis"])
+        if kunde not in kunden_bestellungen:
+            kunden_bestellungen[kunde] = []
+        kunden_bestellungen[kunde].append(gesamt)
+
+    anzahl_bestellungen = sum(len(v) for v in kunden_bestellungen.values())
+    umsatz = sum(float(b["Gesamtpreis"]) for b in gefilterte_bestellungen)
+
+    print(f"\nZeitraum: {start_datum} bis {end_datum}")
+    print(f"Anzahl der Bestellungen: {anzahl_bestellungen}")
+    print(f"Gesamtumsatz: {umsatz:.2f} €")
+
+    # Umsatzanteile je Artikel berechnen
+    artikel_umsatz = {}
+    for b in gefilterte_bestellungen:
+        titel = b["Artikel-Titel"]
+        betrag = float(b["Zwischensumme"])
+        artikel_umsatz[titel] = artikel_umsatz.get(titel, 0) + betrag
+
+    print("\nUmsatz:")
+    sortiert = sorted(artikel_umsatz.items(), key=lambda x: x[1], reverse=True)
+
+    for titel, betrag in sortiert:
+        anteil = (betrag / umsatz) * 100
+        print(f"{titel}: {betrag:.2f} € ({anteil:.1f}%)")
 
 
 def kunden_anzeigen():
