@@ -66,7 +66,6 @@ Bestand: {artikel.bestand}
 Kategorie: {artikel.kategorie}
 -----------------------------""")
 
-#def zum laden der Menüpunkte
 def artikel_nach_preis_anzeigen():
     print("\nVerfügbare Kategorien:")
     print("1. Preisspanne 0 bis 15")
@@ -144,7 +143,6 @@ Kategorie: {artikel.kategorie}
 Erstellungsdatum: {artikel.erstellungsdatum}
 -----------------------------""")
 
-
 class Artikel:
     def __init__(self,id,erstellungsdatum,titel,groesse,beschreibung,preis,bestand,kategorie):
         self.id = id
@@ -155,7 +153,7 @@ class Artikel:
         self.preis = preis
         self.bestand = bestand
         self.kategorie = kategorie
-#artikel in csv speichern
+
 def artikel_speichern(dateiname="artikel.csv"):
     with open(dateiname,mode="w",encoding="utf-8",newline="") as a_liste:
         writer = csv.writer(a_liste)
@@ -163,7 +161,6 @@ def artikel_speichern(dateiname="artikel.csv"):
         for artikel in artikel_liste:
             writer.writerow([artikel.id,artikel.erstellungsdatum,artikel.titel,artikel.groesse, artikel.beschreibung, artikel.preis, artikel.bestand, artikel.kategorie])
 
-#Artikel aus CSV laden
 def artikel_laden(dateiname="artikel.csv"):
     try:
         with open(dateiname,mode="r",encoding="utf-8") as a_liste:
@@ -264,8 +261,6 @@ def artikel_rabatt():
         else:
             print("Rabatt bleibt deaktiviert")
 
-##########Kundenlsite#######
-#Funktion zum Hinzufügen eines Artikels in den Warenkorb#
 def artikel_in_warenkorb():
     print("\n Artikel in den Warenkorb legen ")
     artikel_id = input("Gib die Artikel-ID ein, die du hinzufügen möchtest: ").strip() # strip enfernt leerzeichen
@@ -315,7 +310,7 @@ def warenkorb_anzeigen():
         differenz = min_bestellwert - gesamtpreis
         print(f"(Rabatt aktiv, aber du musst noch {differenz:.2f} € mehr kaufen für den Rabatt von {rabatt_prozent}%)")
 
-def warenkorb_bestellen():
+def warenkorb_bestellen(kundenname):
     print("\n--- Bestellung abschließen ---")
 
     if not warenkorb:
@@ -341,7 +336,10 @@ def warenkorb_bestellen():
         if artikel.bestand < 0:
             artikel.bestand = 0  # Sicherheit
 
+
+
     artikel_speichern()
+    bestellung_speichern_csv(kundenname, warenkorb, gesamtpreis)
     warenkorb.clear()
     print("Deine Bestellung wurde erfolgreich abgeschlossen.")
 
@@ -479,7 +477,6 @@ def kunden_anzeigen():
     Passwort: {kunde.passwort}
      -----------------------------""")  # Trenner zur besseren Lesbarkeit
 
-########Kundenliste#####
 def verwaltungs_menue(): # Menüübersicht zur Ausführung der einzelenen Funktionen für die Verwaltung
     while True:
         print("\n--- Webshop Verwaltung ---")
@@ -506,7 +503,7 @@ def kunden_menue(aktiver_kunde):
         print("\n--- WI Fanshop ---")
         print("1. Artikel suchen") #gemacht
         print("2. Artikel anzeigen") #gemacht
-        print("3. Artikel in Warenkorb") #gemacht
+        print("3. Artikel zum Warenkorb hinzufügen") #gemacht
         print("4. Warenkorb anzeigen") #gemacht
         print("5. Bestellung abschließen")
         print("6. Artikel aus Warenkorb entfernen")
