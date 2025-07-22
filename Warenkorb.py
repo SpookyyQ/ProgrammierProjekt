@@ -65,7 +65,48 @@ Preis: {artikel.preis} €
 Bestand: {artikel.bestand}
 Kategorie: {artikel.kategorie}
 -----------------------------""")
+
 #def zum laden der Menüpunkte
+def artikel_nach_preis_anzeigen():
+    print("\nVerfügbare Kategorien:")
+    print("1. Preisspanne 0 bis 15")
+    print("2. Preisspanne 15 bis 30")
+    print("3. Preisspanne 30 bis 45")
+
+    auswahl = input("Welche Preisspanne möchten sie sehen : ").strip()
+
+    if auswahl == "1":
+        min_preis = 0
+        max_preis = 15
+    elif auswahl == "2":
+        min_preis = 15
+        max_preis= 30
+    elif auswahl == "3":
+        min_preis = 30
+        max_preis = 45
+    else:
+        print("Ungültige Auswahl.")
+        return
+
+    gefundene_artikel = [artikel for artikel in artikel_liste if min_preis <= artikel.preis <= max_preis]
+
+    if not gefundene_artikel:
+        print(f"Keine Artikel in der Preisspanne {min_preis} - {max_preis} gefunden.")
+        return
+
+    print(f"\n Artikel in der Preisspanne: {min_preis} - {max_preis} gefunden")
+    for artikel in gefundene_artikel:
+        print(f"""
+ID: {artikel.id}
+Titel: {artikel.titel}
+Größe: {artikel.groesse}
+Beschreibung: {artikel.beschreibung}
+Preis: {artikel.preis} €
+Bestand: {artikel.bestand}
+Kategorie: {artikel.kategorie}
+Erstellungsdatum: {artikel.erstellungsdatum}
+-----------------------------""")
+
 def artikel_nach_kategorie_anzeigen():
     print("\nVerfügbare Kategorien:")
     print("1. Textilien")
@@ -345,15 +386,15 @@ def bericht_anzeigen():
     start_datum = input("Gib ein Startdatum ein (Format: TT.MM.JJJJ): ")
     end_datum = input("Gib ein Enddatum ein (Format: TT.MM.JJJJ): ")
 
-    def parse_datum(datum_str):
+    def zeitspanne(datum_str):
         try:
             return datetime.datetime.strptime(datum_str, "%d.%m.%Y")
         except:
             print("Falsches Datum.")
             return None
 
-    start = parse_datum(start_datum)
-    end = parse_datum(end_datum)
+    start = zeitspanne(start_datum)
+    end = zeitspanne(end_datum)
 
     if not start or not end:
         return
@@ -362,12 +403,12 @@ def bericht_anzeigen():
     gefilterte_bestellungen = []
     for b in bestellungen:
         zeitstempel = b["Datum"].split()[0]  # Datum ohne Uhrzeit
-        zeit_objekt = parse_datum(zeitstempel)
+        zeit_objekt = zeitspanne(zeitstempel)
         if zeit_objekt and start <= zeit_objekt <= end:
             gefilterte_bestellungen.append(b)
 
     if not gefilterte_bestellungen:
-        print("Keine Bestellungen im angegebenen Zeitraum.")
+        print("Keine Bestellungen im Zeitraum gefunden.")
         return
 
     # Anzahl der Bestellungen
@@ -400,6 +441,29 @@ def bericht_anzeigen():
         anteil = (betrag / umsatz) * 100
         print(f"{titel}: {betrag:.2f} € ({anteil:.1f}%)")
 
+def bestellung_speichern_csv(kundenname, bestellte_artikel, gesamtpreis):
+    dateiname = "bestellungen.csv"
+    kopfzeile = ["Datum", "Kunde", "Artikel-ID", "Artikel-Titel", "Menge", "Einzelpreis", "Zwischensumme", "Gesamtpreis"]
+
+    # Versuche Datei zu öffnen – wenn das fehlschlägt, ist sie neu
+    datei_neu = False
+    try:
+        with open(dateiname, mode="r", encoding="utf-8") as f:
+            pass  # Datei existiert
+    except FileNotFoundError:
+        datei_neu = True  # Datei existiert noch nicht
+
+    with open(dateiname, mode="a", encoding="utf-8", newline="") as datei:
+        writer = csv.writer(datei)
+
+        if datei_neu:
+            writer.writerow(kopfzeile)
+
+        datum = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
+
+        for artikel, menge in bestellte_artikel:
+            zwischensumme = artikel.preis * menge
+            writer.writerow([datum, kundenname, artikel.id, artikel.titel, menge, artikel.preis, zwischensumme, gesamtpreis])
 
 def kunden_anzeigen():
     print("\n Kundenliste")
@@ -416,7 +480,7 @@ def kunden_anzeigen():
      -----------------------------""")  # Trenner zur besseren Lesbarkeit
 
 ########Kundenliste#####
-def verwaltungs_menue():
+def verwaltungs_menue(): # Menüübersicht zur Ausführung der einzelenen Funktionen für die Verwaltung
     while True:
         print("\n--- Webshop Verwaltung ---")
         print("1. Artikel hinzufügen") # gemacht
@@ -432,12 +496,12 @@ def verwaltungs_menue():
         elif auswahl == "2": artikel_loeschen()     #gemacht
         elif auswahl == "3": artikel_bearbeiten()  #gemacht
         elif auswahl == "4": artikel_rabatt()       #gemacht
-        elif auswahl == "5": bericht_anzeigen()  #entweder nur statistik oder mit matlib
+        elif auswahl == "5": bericht_anzeigen()  #gemacht
         elif auswahl == "6": kunden_anzeigen()      #gemacht
         elif auswahl == "0": break
         else: print("Auswahl ungültig")
 
-def kunden_menue():
+def kunden_menue(aktiver_kunde):
     while True:
         print("\n--- WI Fanshop ---")
         print("1. Artikel suchen") #gemacht
@@ -446,6 +510,7 @@ def kunden_menue():
         print("4. Warenkorb anzeigen") #gemacht
         print("5. Bestellung abschließen")
         print("6. Artikel aus Warenkorb entfernen")
+        print("7. Artikel in einer Preisspanne anzeigen") # gemacht im test
         print("0. Abmelden")
         auswahl = input()
 
@@ -453,14 +518,15 @@ def kunden_menue():
         elif auswahl == "2": artikel_nach_kategorie_anzeigen() #gemacht glaube ich mal LG TIm
         elif auswahl == "3": artikel_in_warenkorb() #gemacht
         elif auswahl == "4": warenkorb_anzeigen() #gemacht
-        elif auswahl == "5": warenkorb_bestellen()
-        elif auswahl == "6": artikel_aus_warenkorb_entfernen()  # gemacht
+        elif auswahl == "5": warenkorb_bestellen(aktiver_kunde.name) #gemacht
+        elif auswahl == "6": artikel_aus_warenkorb_entfernen() #gemacht
+        elif auswahl == "7": artikel_nach_preis_anzeigen()  # gemacht im test
         elif auswahl == "12345": verwaltungs_menue()
-        elif auswahl == "0": einleitung() #genacht
+        elif auswahl == "0": return
         else: print("Auswahl ungültig")
 
 def einleitung():
-    kunden_laden()
+    kunden_laden() # Kundenliste muss erst geladen werden damit er überprüfen kann ob die Liste bereits vorhanden ist bz ob der Benutzername bereits in der Liste vorhanden ist
     print("Sind sie aktueller Kunde ?")
     member = input("1. Ja  / 2. Nein ")
     if member.isdigit(): #Überprüft ob der String eine Zahl ist und wenn ja, dann ist richtig
@@ -471,10 +537,10 @@ def einleitung():
 
             while True:
                 benutzername = input ("Benutzername: ").strip()
-                if any (k.benutzername == benutzername for k in kunden_liste):
+                if any (k.benutzername == benutzername for k in kunden_liste): # Überprüft ob der in der Liste für den Kubdeb ob der Benutzername schon von einem anderen Kunden belegt wird
                     print("Benutzername ist schon vergeben. Wählen sie einen anderen.")
                 else:
-                    break
+                    break # beendet die Schleife und geht dann im Code weiter
 
             name = input("Name: ")
             passwort = input("Passwort: ")
@@ -482,34 +548,38 @@ def einleitung():
             plz = input("PLZ: ")
             ort = input("Ort: ")
 
-            neuer_kunde = Kunde(len(kunden_liste) + 1, name,benutzername, passwort, strasse, plz, ort)
-            kunden_liste.append(neuer_kunde)      #einmal nachlesen angeblich wird hier ein Kundenobjekt gemacht und in Kunden_liste abgespeichert
-            kunden_speichern()
+            neuer_kunde = Kunde(len(kunden_liste) + 1, name,benutzername, passwort, strasse, plz, ort) # Zählt die Liste durch und hängt an letzter stelle dann den neuen Kunden an
+            kunden_liste.append(neuer_kunde)      #fügt den Kunden dann hinzu
+            kunden_speichern() #speichert den Kunden dann in der Liste
             print (f"Konto für {name} wurde erstellt und gespeichert.")
-            return neuer_kunde
+            return neuer_kunde # neuer Kunde wird somit weiterverwendet
 
-        elif member == 1:
+        elif member == 1: # wenn die eingabe halt 1 war dann :
             benutzername = input("Gebe deinen Benutzernamen ein:  ")
             passwort = input("Gebe dein Passwort ein: ")
-            for kunde in kunden_liste:
-                if kunde.benutzername == benutzername and kunde.passwort == passwort:
+            for kunde in kunden_liste: # überprüft ob der kunde in der Kundenliste ist
+                if kunde.benutzername == benutzername and kunde.passwort == passwort: # schaut welcher Benutzernamen und Passwort übereinstimmen
                     print(f"Herzlichen Willkommen {kunde.name} ")
-                    return kunde
+                    return kunde # Kunde der angemledet wurde wird somit weiterverwendet
             print("Benutzername oder Passwort sind falsch oder nicht gegeben.")
-            return einleitung()
+            return einleitung() # startet die Einleitung wieder
 
         else:
             print("Bitte bestätige mit 1 oder 2")
-            return einleitung()
+            return einleitung() # startet die Einleitung wieder
 
     else:
         print("Bitte gib nur eine Zahl ein, benutze keine Buchstaben")
-        return einleitung()
+        return einleitung() # startet die Einleitung wieder
 
 def laden():
     kunden_laden()
     artikel_laden()
 
+def hauptmenue():
+    while True:
+        aktiver_kunde = einleitung()
+        kunden_menue(aktiver_kunde)
+
 laden()
-einleitung()
-kunden_menue()
+hauptmenue()
