@@ -9,3 +9,5 @@ Datum,Kunde,Artikel-ID,Artikel-Titel,Menge,Einzelpreis,Zwischensumme,Gesamtpreis
 08.07.2025 00:00,Nico,210,Multifunktionstuch,5,2.0,10.0,10.0
 08.07.2025 00:03,Nico,301,Bleistift Fakultäten mit Radierer,3,0.95,2.8499999999999996,2.8499999999999996
 08.07.2025 00:04,Tim,306,Kugelschreiber Fakultäten,5,0.95,4.75,4.75
+22.07.2025 23:15,Tim,101,Babybody,2,11.9,23.8,23.8
+23.07.2025 22:16,Nico,102,Babybody,10,11.9,119.0,107.1

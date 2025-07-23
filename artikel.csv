@@ -1,9 +1,9 @@
 ID,Erstellungsdatum,Titel,Grösse,Beschreibung,Preis,Bestand,Kategorie
-101,05/07/2025,Babybody,XS,Der Babybody ist aus weicher Baumwolle gefertigt und ideal für die empfindliche Haut von Babys. Mit praktischen Druckknöpfen im Schritt lässt er sich einfach an und ausziehen,11.9,98,Textilien
-102,05/07/2025,Babybody,S,Der Babybody ist aus weicher Baumwolle gefertigt und ideal für die empfindliche Haut von Babys. Mit praktischen Druckknöpfen im Schritt lässt er sich einfach an und ausziehen,11.9,100,Textilien
+101,05/07/2025,Babybody,XS,Der Babybody ist aus weicher Baumwolle gefertigt und ideal für die empfindliche Haut von Babys. Mit praktischen Druckknöpfen im Schritt lässt er sich einfach an und ausziehen,11.9,63,Textilien
+102,05/07/2025,Babybody,S,Der Babybody ist aus weicher Baumwolle gefertigt und ideal für die empfindliche Haut von Babys. Mit praktischen Druckknöpfen im Schritt lässt er sich einfach an und ausziehen,11.9,90,Textilien
 103,05/07/2025,Fleecejacke Damen,S,Fleecejacke mit farbenfrohem htw saar Stick auf der Brust. Das dichte und kompakte Fleece-Material sorgt für minimalen Wärmeverlust,32.5,0,Textilien
 104,05/07/2025,Fleecejacke Damen,M,Fleecejacke mit farbenfrohem htw saar Stick auf der Brust. Das dichte und kompakte Fleece-Material sorgt für minimalen Wärmeverlust,32.5,100,Textilien
-105,05/07/2025,Fleecejacke Damen,L,Fleecejacke mit farbenfrohem htw saar Stick auf der Brust. Das dichte und kompakte Fleece-Material sorgt für minimalen Wärmeverlust,32.5,100,Textilien
+105,05/07/2025,Fleecejacke Damen,L,Fleecejacke mit farbenfrohem htw saar Stick auf der Brust. Das dichte und kompakte Fleece-Material sorgt für minimalen Wärmeverlust,32.5,95,Textilien
 106,05/07/2025,Fleecejacke Damen,XL,Fleecejacke mit farbenfrohem htw saar Stick auf der Brust. Das dichte und kompakte Fleece-Material sorgt für minimalen Wärmeverlust,32.5,95,Textilien
 107,05/07/2025,Fleecejacke Damen,XXL,Fleecejacke mit farbenfrohem htw saar Stick auf der Brust. Das dichte und kompakte Fleece-Material sorgt für minimalen Wärmeverlust,32.5,94,Textilien
 108,05/07/2025,Fleecejacke Herren,S,Fleecejacke mit farbenfrohem htw saar Stick auf der Brust. Das dichte und kompakte Fleece-Material sorgt für minimalen Wärmeverlust,32.5,90,Textilien
@@ -58,7 +58,7 @@ ID,Erstellungsdatum,Titel,Grösse,Beschreibung,Preis,Bestand,Kategorie
 157,05/07/2025,T-Shirt Unisex,M,Zeitloses Unisex T Shirt mit htw saar Logo bequem lässig und vielseitig einsetzbar,14.95,100,Textilien
 158,05/07/2025,T-Shirt Unisex,L,Zeitloses Unisex T Shirt mit htw saar Logo bequem lässig und vielseitig einsetzbar,14.95,100,Textilien
 159,05/07/2025,T-Shirt Unisex,XL,Zeitloses Unisex T Shirt mit htw saar Logo bequem lässig und vielseitig einsetzbar,14.95,100,Textilien
-160,05/07/2025,T-Shirt Unisex,XXL,Zeitloses Unisex T Shirt mit htw saar Logo bequem lässig und vielseitig einsetzbar,14.95,100,Textilien
+160,05/07/2025,T-Shirt Unisex,XXL,Zeitloses Unisex T Shirt mit htw saar Logo bequem lässig und vielseitig einsetzbar,14.95,95,Textilien
 201,05/07/2025,Baumwolltasche,Universell,Fair gehandelter Baumwollbeutel aus Biobaumwolle mit langen Henkeln und plakativem Print.,3.95,90,Accessoires
 202,05/07/2025,Bio-Baumwollbeutel Fakultäten,Pink,Fair gehandelter Baumwollbeutel aus Biobaumwolle (GOTS und FAIRTRADE zertifiziert) mit langen Henkeln und plakativem Print.,3.95,100,Accessoires
 203,05/07/2025,Bio-Baumwollbeutel Fakultäten,Blau,Fair gehandelter Baumwollbeutel aus Biobaumwolle (GOTS und FAIRTRADE zertifiziert) mit langen Henkeln und plakativem Print.,3.95,100,Accessoires
