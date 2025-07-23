@@ -462,10 +462,10 @@ def bestellung_speichern_csv(kundenname, bestellte_artikel, gesamtpreis):
 def kunden_suche():
     print("\n--- Kunden suchen ---")
     name = input("Gib den Kundennamen ein: ")
-    gefunden = False
-    for kunde in kunden_liste:
-        if name.lower() in kunde.name.lower():
-            print(f"ID: {kunde.id} - Name: {kunde.name} - Adresse: {kunde.strasse}, {kunde.plz} {kunde.ort}")
+    gefunden = False  # Erstellt eine Variable um zu verfolgen, ob mindestens ein Kunde gefunden wurde
+    for kunde in kunden_liste:    #geht durch jeden Kunden in der Kundenliste
+        if name.lower() in kunde.name.lower():   #Prüft ob der eingegebene Name im Kundennamen enthalten ist
+            print(f"ID: {kunde.id} - Name: {kunde.name} - Adresse: {kunde.strasse}, {kunde.plz} {kunde.ort}")  #f" um variablen im text einzufügen
             gefunden = True
     if not gefunden:
         print("Keine Kunden gefunden.")  #falls kein kunde mit dem namen gefunden wurde
@@ -543,7 +543,7 @@ def einleitung():
 
             while True:
                 benutzername = input ("Benutzername: ").strip()
-                if any (k.benutzername == benutzername for k in kunden_liste): # Überprüft ob der in der Liste für den Kubdeb ob der Benutzername schon von einem anderen Kunden belegt wird
+                if any (k.benutzername == benutzername for k in kunden_liste): # Überprüft ob  in der Liste für den Kunden  der Benutzername schon von einem anderen Kunden belegt wird
                     print("Benutzername ist schon vergeben. Wählen sie einen anderen.")
                 else:
                     break # beendet die Schleife und geht dann im Code weiter
@@ -554,13 +554,13 @@ def einleitung():
             plz = input("PLZ: ")
             ort = input("Ort: ")
 
-            neuer_kunde = Kunde(len(kunden_liste) + 1, name,benutzername, passwort, strasse, plz, ort) # Zählt die Liste durch und hängt an letzter stelle dann den neuen Kunden an
+            neuer_kunde = Kunde(len(kunden_liste) + 1, name,benutzername, passwort, strasse, plz, ort) # Zählt die Liste durch und hängt an letzter Stelle dann den neuen Kunden an
             kunden_liste.append(neuer_kunde)      #fügt den Kunden dann hinzu
             kunden_speichern() #speichert den Kunden dann in der Liste
             print (f"Konto für {name} wurde erstellt und gespeichert.")
             return neuer_kunde # neuer Kunde wird somit weiterverwendet
 
-        elif member == 1: # wenn die eingabe halt 1 war dann :
+        elif member == 1: # wenn die eingabe 1 war dann:
             benutzername = input("Gebe deinen Benutzernamen ein:  ")
             passwort = input("Gebe dein Passwort ein: ")
             for kunde in kunden_liste: # überprüft ob der kunde in der Kundenliste ist
