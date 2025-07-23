@@ -425,11 +425,11 @@ def bericht_anzeigen(): #funktion zu anzeige des berichtes
     artikel_umsatz = {} #Artikel und wie viel geld damit gemacht wurde werden darin gespeichert
     for b in gefilterte_bestellungen: # Umsatzanteile je Artikel berechnen
         titel = b["Artikel-Titel"]  #wählt die Artikelnamen in der Bestellung
-        betrag = float(b["Zwischensumme"]) #
-        artikel_umsatz[titel] = artikel_umsatz.get(titel, 0) + betrag
+        betrag = float(b["Zwischensumme"]) #gleiche hier nur macht es zu float
+        artikel_umsatz[titel] = artikel_umsatz.get(titel, 0) + betrag #setzt den Umsatz 0 und fügt dann alle Umsätze in dem Zeitraum ein
 
     print("\nUmsatz:")
-    sortiert = sorted(artikel_umsatz.items(), key=lambda x: x[1], reverse=True)
+    sortiert = sorted(artikel_umsatz.items(), key=lambda x: x[1], reverse=True) #sortiert alle Umsätze von Höchsten nach Niedrigsten /sorted sortiert listen / key=lambda x: x[1] sortiert den zweiten wert dem Tupel also den Umsatz/ reverse macht von groß nach klein sortieren /
 
     for titel, betrag in sortiert:
         anteil = (betrag / umsatz) * 100
@@ -437,44 +437,46 @@ def bericht_anzeigen(): #funktion zu anzeige des berichtes
 
 def bestellung_speichern_csv(kundenname, bestellte_artikel, gesamtpreis):
     dateiname = "bestellungen.csv"
-    kopfzeile = ["Datum", "Kunde", "Artikel-ID", "Artikel-Titel", "Menge", "Einzelpreis", "Zwischensumme", "Gesamtpreis"]
+    kopfzeile = ["Datum", "Kunde", "Artikel-ID", "Artikel-Titel", "Menge", "Einzelpreis", "Zwischensumme", "Gesamtpreis"] # erste zeile
 
-    # Versuche Datei zu öffnen – wenn das fehlschlägt, ist sie neu
-    datei_neu = False
+    datei_neu = False # Versuche Datei zu öffnen – wenn das fehlschlägt, ist sie neu
     try:
-        with open(dateiname, mode="r", encoding="utf-8") as f:
+        with open(dateiname, mode="r", encoding="utf-8") as f: # versucht die datei zu öffnen und lesen wemm ja fertig
             pass  # Datei existiert
-    except FileNotFoundError:
-        datei_neu = True  # Datei existiert noch nicht
+    except FileNotFoundError: # wenn sie nicht existiert fehler
+        datei_neu = True  # Datei existiert noch nicht so wird nur beim ersten mal die kopfzeile geschriben
 
-    with open(dateiname, mode="a", encoding="utf-8", newline="") as datei:
+    with open(dateiname, mode="a", encoding="utf-8", newline="") as datei: # Datei öffen a = unten neue Zeile anhängen
+        writer = csv.writer(datei) # jetzt kann man etwas schreiben
         writer = csv.writer(datei)
 
         if datei_neu:
-            writer.writerow(kopfzeile)
+            writer.writerow(kopfzeile) # fall die datei neu ist wird die Kopfzeile geschrieben
 
-        datum = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
+        datum = datetime.datetime.now().strftime("%d.%m.%Y %H:%M") # aktuelles  datum
 
-        for artikel, menge in bestellte_artikel:
+        for artikel, menge in bestellte_artikel: # tupel suche
             zwischensumme = artikel.preis * menge
-            writer.writerow([datum, kundenname, artikel.id, artikel.titel, menge, artikel.preis, zwischensumme, gesamtpreis])
+            writer.writerow([datum, kundenname, artikel.id, artikel.titel, menge, artikel.preis, zwischensumme, gesamtpreis]) # eine neue zeile wird geschrieben
 
 def kunden_suche():
     print("\n--- Kunden suchen ---")
     name = input("Gib den Kundennamen ein: ")
+    gefunden = False
     for kunde in kunden_liste:
         if name.lower() in kunde.name.lower():
             print(f"ID: {kunde.id} - Name: {kunde.name} - Adresse: {kunde.strasse}, {kunde.plz} {kunde.ort}")
-    else:
-        print("Keine Kunden gefunden.")
+            gefunden = True
+    if not gefunden:
+        print("Keine Kunden gefunden.")  #falls kein kunde mit dem namen gefunden wurde
 
 def kunden_anzeigen():
     print("\n Kundenliste")
     if not kunden_liste: # wenn die Liste leer wäre
        print("Es sind noch keine Kunden registriert")
        return # funktion beenden
-    for kunde in kunden_liste:
-        print(f"""
+    for kunde in kunden_liste:  #falls der kunde gefunden wurde wird die liste ausgegeben:
+        print(f"""            
     ID: {kunde.id}
     Name: {kunde.name}
     Benutzername: {kunde.benutzername}
@@ -491,7 +493,7 @@ def verwaltungs_menue(): # Menüübersicht zur Ausführung der einzelnen Funktio
         print("4. Rabatt Aktivieren")
         print("5. Bericht Anzeigen")
         print("6. Kunden liste")
-        print("7- Kunde suchen")
+        print("7. Kunde suchen")
         print("0. Abbrechen")
         auswahl = input()
 
