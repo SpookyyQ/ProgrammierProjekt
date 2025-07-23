@@ -154,21 +154,21 @@ class Artikel:
         self.bestand = bestand
         self.kategorie = kategorie
 
-def artikel_speichern(dateiname="artikel.csv"):
-    with open(dateiname,mode="w",encoding="utf-8",newline="") as a_liste:
-        writer = csv.writer(a_liste)
-        writer.writerow(["ID","Erstellungsdatum", "Titel","Grösse", "Beschreibung", "Preis", "Bestand", "Kategorie"])
-        for artikel in artikel_liste:
-            writer.writerow([artikel.id,artikel.erstellungsdatum,artikel.titel,artikel.groesse, artikel.beschreibung, artikel.preis, artikel.bestand, artikel.kategorie])
+def artikel_speichern(dateiname="artikel.csv"): # Standart Parameter
+    with open(dateiname,mode="w",encoding="utf-8",newline="") as a_liste: # w = schreiben utf-8 = Umlaute Korrekt speichern newline= keine leere Zeilen as alist= für den zugriff
+        writer = csv.writer(a_liste) # CSV Schreiber für in der Datei
+        writer.writerow(["ID","Erstellungsdatum", "Titel","Grösse", "Beschreibung", "Preis", "Bestand", "Kategorie"]) # Kopfzeie schreiben
+        for artikel in artikel_liste: # schleife durch die Artikel list Artikel = eine Klasse
+            writer.writerow([artikel.id,artikel.erstellungsdatum,artikel.titel,artikel.groesse, artikel.beschreibung, artikel.preis, artikel.bestand, artikel.kategorie]) # schreibt eine neue zeile für jeden Artikel
 
-def artikel_laden(dateiname="artikel.csv"):
+def artikel_laden(dateiname="artikel.csv"): #
     try:
-        with open(dateiname,mode="r",encoding="utf-8") as a_liste:
-            reader = csv.reader(a_liste)
-            next(reader)
-            for row in reader:
-                if len(row) == 8:
-                    id,erstellungsdatum,titel,groesse,beschreibung,preis,bestand,kategorie = row
+        with open(dateiname,mode="r",encoding="utf-8") as a_liste: # r = lesen utf-8 = Umlaute Korrekt speichern as alist= für den zugriff
+            reader = csv.reader(a_liste) # CSV Leser
+            next(reader) # erste Zeile überspringen
+            for row in reader: # geht jede weitere Zeile durch
+                if len(row) == 8: # sicherheit  nur zeilen mit 8 Spalten werden aktzeptiert
+                    id,erstellungsdatum,titel,groesse,beschreibung,preis,bestand,kategorie = row  # verteilung der 8 Spalten auf die 
                     artikel_liste.append(Artikel(id,erstellungsdatum,titel,groesse,beschreibung,float(preis),int(bestand),kategorie))
     except FileNotFoundError:
         pass
@@ -520,8 +520,8 @@ def kunden_menue(aktiver_kunde):
         print("0. Abmelden")
         auswahl = input()
 
-        if auswahl == "1": artikel_suchen()
-        elif auswahl == "2": artikel_nach_kategorie_anzeigen() #gemacht glaube ich mal LG TIm
+        if auswahl == "1": artikel_suchen()   # Zeile 46
+        elif auswahl == "2": artikel_nach_kategorie_anzeigen() # Zeile 109
         elif auswahl == "3": artikel_in_warenkorb()
         elif auswahl == "4": warenkorb_anzeigen()
         elif auswahl == "5": warenkorb_bestellen(aktiver_kunde.name)
