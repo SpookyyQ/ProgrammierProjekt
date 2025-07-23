@@ -168,9 +168,9 @@ def artikel_laden(dateiname="artikel.csv"): #
             next(reader) # erste Zeile überspringen
             for row in reader: # geht jede weitere Zeile durch
                 if len(row) == 8: # sicherheit  nur zeilen mit 8 Spalten werden aktzeptiert
-                    id,erstellungsdatum,titel,groesse,beschreibung,preis,bestand,kategorie = row  # verteilung der 8 Spalten auf die 
-                    artikel_liste.append(Artikel(id,erstellungsdatum,titel,groesse,beschreibung,float(preis),int(bestand),kategorie))
-    except FileNotFoundError:
+                    id,erstellungsdatum,titel,groesse,beschreibung,preis,bestand,kategorie = row  # verteilung der 8 Spalten auf die Variablen
+                    artikel_liste.append(Artikel(id,erstellungsdatum,titel,groesse,beschreibung,float(preis),int(bestand),kategorie)) # neues Artikel Objekt hinzufügen
+    except FileNotFoundError: # wird die datei nicht gefunden passiert nix
         pass
 
 def artikel_hinzufuegen():
@@ -312,24 +312,24 @@ def warenkorb_anzeigen():
 def warenkorb_bestellen(kundenname):
     print("\n---Bestellung abschließen---")
 
-    if not warenkorb: #falls die Warenkorbliste leer ist dann:
+    if not warenkorb: #falls die Warenkorbliste leer ist dann wird abgebrochen
         print("Dein Warenkorb ist leer. Bestellung nicht möglich.")
         return
 
     gesamtpreis = 0 #gesamtpreis wird wieder definiert
-    for artikel, menge in warenkorb: #sucht im warenkorb wieder alle Artikel und Mengen
-        zwischensumme = artikel.preis * menge
+    for artikel, menge in warenkorb: #sucht im warenkorb wieder alle Artikel und Mengen als Tupel
+        zwischensumme = artikel.preis * menge # Werte aus Tuep übernommen
         gesamtpreis += zwischensumme # rechnet wieder gesamtpreis aus
 
     rabatt_betrag = 0
-    if rabatt_aktiv and gesamtpreis >= min_bestellwert:
+    if rabatt_aktiv and gesamtpreis >= min_bestellwert: # kriterien prüfen
         rabatt_betrag = gesamtpreis * (rabatt_prozent / 100)
         gesamtpreis -= rabatt_betrag # zieht den Rabatt vom Gesamtbetrag ab
         print(f"Rabatt von {rabatt_prozent}% angewendet: -{rabatt_betrag:.2f} €")
 
     print(f"\nEndpreis deiner Bestellung: {gesamtpreis:.2f} €")
 
-    for artikel, menge in warenkorb:
+    for artikel, menge in warenkorb: # Tupel
         artikel.bestand -= menge # nach abschluss der Bestellung wird für jeden Artikel im Warenkorb der Bestand neu berechnet in dem die Menge jeweil abgezogen wird
 
         if artikel.bestand < 0: # wird zur sicherheit gemacht das kein negativer wert möglich ist falls es zu Fehlern kommt
@@ -343,18 +343,18 @@ def warenkorb_bestellen(kundenname):
     print("Deine Bestellung wurde erfolgreich abgeschlossen.")
 
 def artikel_aus_warenkorb_entfernen():
-    artikel_id = input("Welche Artikel-ID soll entfernt werden? ").strip()
+    artikel_id = input("Welche Artikel-ID soll entfernt werden? ").strip() # Artikel der gelöscht werden soll strip=leerzeichen entfernen
 
-    for i, (artikel, menge) in enumerate(warenkorb): # Jedes Element om Warenkorb durch gehen gleichzeitg auf Artikel,menge zugreifen und sich dabei den index merken
-        if artikel.id == artikel_id:
+    for i, (artikel, menge) in enumerate(warenkorb): # Jedes Element im Warenkorb durch gehen gleichzeitg auf Artikel,menge zugreifen und sich dabei den index merken
+        if artikel.id == artikel_id: # Artikel der gelöscht werden soll
             print(f"Im Warenkorb: {menge}x {artikel.titel}")
-            anzahl = input("Wie viele möchtest du entfernen? ").strip()
+            anzahl = input("Wie viele möchtest du entfernen? ").strip() # anzahl zum löschen
 
             if anzahl.isdigit(): # überprüft ob es eine Zahl ist und wenn ja dann:
                 anzahl = int(anzahl) # input anzahl in ein int umgewandelt damit man mit rechenn kann
 
                 if anzahl >= menge:
-                    del warenkorb[i] #ganzer Warenkorb wird für den index gelöscht
+                    del warenkorb[i] #ganzer Artikel wird über denn  index asu dem Warenkorb gelöscht
                     print("Artikel komplett entfernt.")
                 elif anzahl > 0:
                     warenkorb[i] = (artikel, menge - anzahl) # hier wird nur die anzahl von der menge abgezogen
@@ -365,15 +365,15 @@ def artikel_aus_warenkorb_entfernen():
                 print("Ungültige Eingabe.")
             return
 
-    print("Artikel nicht im Warenkorb gefunden.")
+    print("Artikel nicht im Warenkorb gefunden.") # wenn die id nicht gefunden wurde
 
 def bericht_anzeigen(): #funktion zu anzeige des berichtes
     print("\n---Bericht für die Geschäftsführung---")
-    dateiname = "bestellungen.csv"
+    dateiname = "bestellungen.csv" # zeigt welche datei  geöffnet werden soll
 
-    try:
+    try: # versucht die datei zu lesen
         with open(dateiname, mode="r", encoding="utf-8") as datei: # öffnet bestellungcsv im Lesemodus
-            reader = csv.DictReader(datei)  # liest Zeile für Zeile und macht für jede Zeile ein Ordner
+            reader = csv.DictReader(datei)  # liest Zeile für Zeile und macht für jede Zeile ein Ordner Datum: x , Kunde: y
             bestellungen = list(reader) # umwadnlung in Liste damit man sie mehrmals durchlaufen kann
 
     except FileNotFoundError: #wieder falls die csv nicht vorhanden oder Fehler auftritt
@@ -383,14 +383,14 @@ def bericht_anzeigen(): #funktion zu anzeige des berichtes
     start_datum = input("Gib ein Startdatum ein (Format: TT.MM.JJJJ): ") #man muss das Startdatum vom Bericht angeben
     end_datum = input("Gib ein Enddatum ein (Format: TT.MM.JJJJ): ") #man muss das Enddatum vom Bericht angeben
 
-    def zeitspanne(datum_str):
+    def zeitspanne(datum_str): # hilfsfunktion
         try:
             return datetime.datetime.strptime(datum_str, "%d.%m.%Y") #wandelt das String datum in ein richtges Datum mit Monat um
-        except: # ist das gegenstück für try also wennw as nicht so läuft wie es laufen soll
-            print("Falsches Datum.")
+        except: # ist das gegenstück für try also wenn was nicht so läuft wie es laufen soll
+            print("Falsches Datum.") # wenn das datum falsch formatiert ist
             return None
 
-    start = zeitspanne(start_datum)
+    start = zeitspanne(start_datum) # umwandlung in datetime objekte
     end = zeitspanne(end_datum)
 
     if not start or not end:  #falls start oder end nicht eingeben wurde geht er zurück zu eingabe
@@ -399,7 +399,7 @@ def bericht_anzeigen(): #funktion zu anzeige des berichtes
     gefilterte_bestellungen = [] #liste für die bestellungen die rausgesucht wurden in dem Zeitraum
     for b in bestellungen: # Filtere relevante Bestellungen nach Zeitraum
         zeitstempel = b["Datum"].split()[0]  # Datum ohne Uhrzeit, da in der csv mit Uhrzeit ist so wird das formatiert
-        zeit_objekt = zeitspanne(zeitstempel)  #Wandelt den Datum-String aus der CSV in ein datetime-Objekt um
+        zeit_objekt = zeitspanne(zeitstempel)  #Wandelt den Datum-String aus der CSV in ein datetime-Objekt um Hilfsfunktion
         if zeit_objekt and start <= zeit_objekt <= end: #prüft ob das datum zwischen Start und Enddatum liegt
             gefilterte_bestellungen.append(b) #fügt die gefilderte bestellung hinzu
 
